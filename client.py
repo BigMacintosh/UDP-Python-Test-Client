@@ -120,7 +120,7 @@ class Game(object):
                     else:
                         print('client id already taken, trying again')
 
-            except socket.Timeout:
+            except socket.timeout:
                 pass
         self.player_id = player_id
 
@@ -143,7 +143,7 @@ class Game(object):
             else:
                 print('unexpected packet ? {}'.format(data))
             self.timeout_count = 0
-        except socket.Timeout:
+        except socket.timeout:
             self.timeout_count += 1
             if self.timeout_count > 10:
                 self.stop = True
