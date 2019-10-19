@@ -5,7 +5,7 @@ import sys
 import socket
 import random
 import json
-import urllib2
+import urllib
 
 
 class Timer(object):
@@ -45,8 +45,8 @@ class Timer(object):
                 'ping_count': self.count,
                 'ping_misses': self.attemped_count - self.count,
             }
-            req = urllib2.Request('https://www.rileyevans.co.uk/gp/add-result/')
-            res = urllib2.urlopen(req, json.dumps(data))
+            req = urllib.request('https://www.rileyevans.co.uk/gp/add-result/')
+            res = urllib.urlopen(req, json.dumps(data))
 
             res_data = json.loads(res.read())
             if not res_data['error']:
@@ -77,7 +77,7 @@ class Game(object):
         self.other_players = {}
         self.timer = Timer()
         self.clientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.clientSocket.settimeout(0)
+        self.clientSocket.settimeout(2)
         self.timeout_count = 0
 
     def start(self):
@@ -133,7 +133,7 @@ class Game(object):
             self.me['y'] -= 255
 
     def send_location(self):
-        message = bytearray([3, self.me['x'], self.me['y']])
+        message = bytearray([3, self.player_id, self.me['x'], self.me['y']])
         try:
             self.clientSocket.sendto(message, (self.server_ip, self.port))
             data, server = receive(self.timer, self.clientSocket)
